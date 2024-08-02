@@ -2,6 +2,7 @@ from .utils import get_outbound_ss, get_outbound_trojan, get_outbound_vless, get
 from .utils import EConfigType, OutboundBean, Fingerprint, VmessQRCode
 import base64
 import json
+import copy
 
 import re
 from urllib.parse import urlparse
@@ -371,6 +372,8 @@ def gen_transport(stream_settings: dict) -> dict:
 def generate_config(outbond: list[dict]) -> str:
     domain_suffix = []
     sing_box_outbond = []
+    selector = copy.deepcopy(SELECTOR_BASE)
+    urltest = copy.deepcopy(URLTEST_BASE)
 
     with open("main_app/nekobox_base.json") as f:
         data = json.load(f)
@@ -391,14 +394,14 @@ def generate_config(outbond: list[dict]) -> str:
             {"tag": out["tag"], "type": protocol, **settings})
 
         domain_suffix.append(server["address"])
-        SELECTOR_BASE["outbounds"].append(out["tag"])
-        URLTEST_BASE["outbounds"].append(out["tag"])
+        selector["outbounds"].append(out["tag"])
+        urltest["outbounds"].append(out["tag"])
 
     domain_suffix = list(set(domain_suffix))
     data['dns']['rules'][0]['domain_suffix'] = domain_suffix
     data['outbounds'] = [
-        SELECTOR_BASE,
-        URLTEST_BASE,
+        selector,
+        urltest,
         *OUTBOND,
         *sing_box_outbond
     ]
