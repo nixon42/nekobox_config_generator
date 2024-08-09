@@ -36,7 +36,7 @@ URLTEST_BASE = {
     "outbounds": [
     ],
     "url": "https://detectportal.firefox.com/success.txt",
-    "interval": "1m0s",
+    "interval": "120m",
     "interrupt_exist_connections": False
 }
 
